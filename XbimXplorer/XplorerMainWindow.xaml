@@ -76,7 +76,13 @@
             <RowDefinition Height="Auto" MinHeight="23" />
         </Grid.RowDefinitions>
 
-        <Menu Grid.Row="0" >
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+            
+        <Menu Grid.Column="0" >
             <MenuItem Header="_File">
                 <MenuItem Header="_Open" Command="Open" ToolTip="Load a single Ifc, Xbim, IfcZip or IfcXML file." />
                 <MenuItem Header="_Reload model" Command="Refresh"/>
@@ -167,6 +173,10 @@
             </MenuItem>
             <MenuItem Header="_About" Click="About_Click"/>
         </Menu>
+            <Button Grid.Column="1" Width="80" Height="20" Margin="1"  
+                    Content="Make Color" Click="Button_MakeColor_Click">
+            </Button>
+        </Grid>
 
         <avalonDock:DockingManager Grid.Row="1" x:Name="DockingManager">
             <avalonDock:LayoutRoot>
