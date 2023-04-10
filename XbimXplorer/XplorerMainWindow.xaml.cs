@@ -1218,6 +1218,7 @@ namespace XbimXplorer
 
 		public Dictionary<LODs, ILayerStyler> LodStyles;
 		private LODs _currentLod = LODs.Default;
+		private List<Type> _emptyExcludeTypes = new List<Type>();
 
 		private void Button_MakeColor_Click(object sender, RoutedEventArgs e)
 		{
@@ -1231,7 +1232,13 @@ namespace XbimXplorer
 			int index = lods.IndexOf(_currentLod);
 			index = (index + 1) % lods.Count;
 			_currentLod = lods[index];
+
 			this.DrawingControl.DefaultLayerStyler = LodStyles[_currentLod];
+			if (_currentLod == LODs.Default)
+				this.DrawingControl.ExcludedTypes = DrawingControl3D.DefaultExcludedTypes;
+			else
+				this.DrawingControl.ExcludedTypes = _emptyExcludeTypes;
+			this.DrawingControl.ReloadModel();
 		}
 
 		private void CreateLodStyles()
@@ -1249,60 +1256,6 @@ namespace XbimXplorer
 						LodStyles.Add(lod, this.DrawingControl.DefaultLayerStyler);
 				}
 			}
-		}
-
-		public void MakeColors(object sender, RoutedEventArgs e)
-		{
-			if (LodStyles == null)
-			{
-				LodStyles = new Dictionary<LODs, ILayerStyler>();
-				var lods = Enum.GetValues(typeof(LODs)).Cast<LODs>().ToList();
-				foreach (var lod in lods)
-				{
-					if (lod != LODs.Default)
-					{
-						SurfaceLayerStyler style = new SurfaceLayerStyler(this.Logger);
-						XbimTexture texture = GetTextture(lod);
-						var matter = new WpfMaterial();
-						matter.CreateMaterial(texture);
-						LodStyles.Add(lod, style);
-					}
-				}
-			}
-		}
-
-		private XbimTexture GetTextture(LODs lod)
-		{
-			SolidColorBrush brush = null;
-			switch (lod)
-			{
-				case LODs.LOD_100:
-					brush = Brushes.Aqua;
-					break;
-
-				case LODs.LOD_200:
-					brush = Brushes.Yellow;
-					break;
-
-				case LODs.LOD_300:
-					brush = Brushes.Orange;
-					break;
-
-				case LODs.LOD_400:
-					brush = Brushes.Red;
-					break;
-
-				case LODs.LOD_500:
-					brush = Brushes.DarkMagenta;
-					break;
-			}
-
-			if (brush != null)
-			{
-				Color color = brush.Color;
-				return XbimTexture.Create(color.R, color.G, color.B, color.A);
-			}
-			return null;
 		}
 
 		#endregion

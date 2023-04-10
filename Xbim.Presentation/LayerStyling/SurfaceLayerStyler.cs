@@ -337,15 +337,15 @@ namespace Xbim.Presentation.LayerStyling
 					break;
 
 				case LODs.LOD_300:
-					brush = Brushes.Orange;
-					break;
-
-				case LODs.LOD_400:
 					brush = Brushes.Red;
 					break;
 
-				case LODs.LOD_500:
+				case LODs.LOD_400:
 					brush = Brushes.DarkMagenta;
+					break;
+
+				case LODs.LOD_500:
+					brush = Brushes.DarkOliveGreen;
 					break;
 			}
 			return brush;
@@ -385,14 +385,21 @@ namespace Xbim.Presentation.LayerStyling
 					var tmpTransparentsGroup = new Model3DGroup();
 
 					//get a list of all the unique style ids then build their style and mesh
-					var sstyleIds = geomReader.StyleIds;
-					foreach (var styleId in sstyleIds)
+					if (_lod == LODs.Default)
 					{
-						var wpfMaterial = GetWpfMaterial(model, styleId);
-						materialsByStyleId.Add(styleId, wpfMaterial);
+						var sstyleIds = geomReader.StyleIds;
+						foreach (var styleId in sstyleIds)
+						{
+							var wpfMaterial = GetWpfMaterial(model, styleId);
+							materialsByStyleId.Add(styleId, wpfMaterial);
 
-						var mg = GetNewStyleMesh(wpfMaterial, tmpTransparentsGroup, tmpOpaquesGroup);
-						meshesByStyleId.Add(styleId, mg);
+							var mg = GetNewStyleMesh(wpfMaterial, tmpTransparentsGroup, tmpOpaquesGroup);
+							meshesByStyleId.Add(styleId, mg);
+						}
+					}
+					else
+					{
+
 					}
 
 					var shapeInstances = GetShapeInstancesToRender(geomReader, excludedTypes);
